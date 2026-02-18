@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="uae smart sustainability dashboard tracking air, solar and water metrics">
+<title>UAE Eco City OS</title>
+
+<style>
+:root{
+--bg:#06162e;
+--card:#0f2b52;
+--accent:#00e676;
+--text:#e6f1ff;
+--muted:#7c9cc4;
+--radius:16px;
+}
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:system-ui,sans-serif;
+}
+
+body{
+background:linear-gradient(135deg,#06162e,#0a1f44);
+color:var(--text);
+overflow:hidden;
+}
+
+/* LOADING SCREEN */
+#loading{
+position:fixed;
+inset:0;
+background:#06162e;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+z-index:9999;
+animation:fadeOut 1s ease forwards;
+animation-delay:3s;
+}
+
+.loader{
+width:80px;
+height:80px;
+border:6px solid #0a1f44;
+border-top:6px solid var(--accent);
+border-radius:50%;
+animation:spin 1s linear infinite;
+margin-bottom:20px;
+}
+
+@keyframes spin{
+to{transform:rotate(360deg);}
+}
+
+@keyframes fadeOut{
+to{opacity:0;visibility:hidden;}
+}
+
+/* MAIN OS WINDOW */
+#os{
+display:flex;
+flex-direction:column;
+height:100vh;
+opacity:0;
+animation:fadeIn 1s ease forwards;
+animation-delay:3s;
+}
+
+@keyframes fadeIn{
+to{opacity:1;}
+}
+
+header{
+padding:1.2rem 2rem;
+display:flex;
+justify-content:space-between;
+align-items:center;
+background:rgba(0,0,0,0.2);
+backdrop-filter:blur(8px);
+}
+
+nav a{
+margin-left:1.5rem;
+text-decoration:none;
+color:var(--muted);
+transition:0.3s;
+}
+
+nav a:hover{
+color:var(--accent);
+}
+
+#clock{
+font-weight:600;
+color:var(--accent);
+}
+
+main{
+padding:2rem;
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+gap:2rem;
+flex:1;
+overflow:auto;
+}
+
+.card{
+background:var(--card);
+padding:1.6rem;
+border-radius:var(--radius);
+box-shadow:0 8px 25px rgba(0,0,0,0.4);
+transition:all 0.4s ease;
+animation:slideUp 0.8s ease forwards;
+opacity:0;
+}
+
+.card:nth-child(1){animation-delay:3.2s;}
+.card:nth-child(2){animation-delay:3.4s;}
+.card:nth-child(3){animation-delay:3.6s;}
+
+@keyframes slideUp{
+to{opacity:1;transform:translateY(-10px);}
+}
+
+.metric{
+font-size:2rem;
+margin:0.6rem 0;
+}
+
+progress,meter{
+width:100%;
+height:10px;
+border-radius:8px;
+}
+
+button{
+margin-top:1rem;
+padding:0.6rem 1.2rem;
+border:none;
+border-radius:999px;
+background:var(--accent);
+color:#06162e;
+font-weight:bold;
+cursor:pointer;
+transition:0.3s;
+}
+
+button:hover{
+transform:scale(1.05);
+}
+
+footer{
+text-align:center;
+padding:1rem;
+color:var(--muted);
+}
+
+/* CODE VIEWER */
+#codeBox{
+display:none;
+background:#000;
+color:#00ff88;
+padding:1rem;
+border-radius:12px;
+overflow:auto;
+max-height:300px;
+margin-top:1rem;
+font-family:monospace;
+font-size:0.85rem;
+}
+
+.tag{color:#00e5ff;}
+.attr{color:#ffb703;}
+</style>
+</head>
+
+<body>
+
+<div id="loading">
+<div class="loader"></div>
+<h2>Booting UAE Eco City OS...</h2>
+</div>
+
+<div id="os">
+
+<header>
+<h1>🌿 UAE Eco City OS</h1>
+<div id="clock"></div>
+<nav>
+<a href="#air">Air</a>
+<a href="#solar">Solar</a>
+<a href="#water">Water</a>
+</nav>
+</header>
+
+<main>
+
+<section class="card" id="air">
+<h2>Air Quality Index</h2>
+<div class="metric" id="air-value">53</div>
+<progress id="air-bar" value="53" max="150"></progress>
+<button onclick="updateMetric('air')">Refresh</button>
+</section>
+
+<section class="card" id="solar">
+<h2>Solar Integration</h2>
+<div class="metric" id="solar-value">78%</div>
+<meter id="solar-meter" value="78" min="0" max="100"></meter>
+<button onclick="updateMetric('solar')">Refresh</button>
+</section>
+
+<section class="card" id="water">
+<h2>Water Efficiency</h2>
+<div class="metric" id="water-value">64%</div>
+<meter id="water-meter" value="64" min="0" max="100"></meter>
+<button onclick="updateMetric('water')">Refresh</button>
+</section>
+
+<section class="card">
+<h2>View HTML Structure</h2>
+<button onclick="toggleCode()">Show / Hide Code</button>
+<div id="codeBox">
+<span class="tag">&lt;!doctype html&gt;</span><br>
+<span class="tag">&lt;html</span> <span class="attr">lang</span>=<span class="attr">"en"</span><span class="tag">&gt;</span><br>
+<span class="tag">&lt;head&gt;</span><br>
+&nbsp;&nbsp;<span class="tag">&lt;meta</span> <span class="attr">charset</span>=<span class="attr">"utf-8"</span><span class="tag">&gt;</span><br>
+&nbsp;&nbsp;<span class="tag">&lt;title&gt;</span>UAE Eco City OS<span class="tag">&lt;/title&gt;</span><br>
+<span class="tag">&lt;/head&gt;</span><br>
+<span class="tag">&lt;body&gt;</span>...<span class="tag">&lt;/body&gt;</span><br>
+<span class="tag">&lt;/html&gt;</span>
+</div>
+</section>
+
+</main>
+
+<footer>
+Built to reflect UAE Sustainability Vision • Smart Green Future 🇦🇪
+</footer>
+
+</div>
+
+<script>
+function updateMetric(metric){
+let random=Math.floor(Math.random()*101);
+
+if(metric==="air"){
+document.getElementById("air-value").textContent=random;
+document.getElementById("air-bar").value=random;
+}
+if(metric==="solar"){
+document.getElementById("solar-value").textContent=random+"%";
+document.getElementById("solar-meter").value=random;
+}
+if(metric==="water"){
+document.getElementById("water-value").textContent=random+"%";
+document.getElementById("water-meter").value=random;
+}
+}
+
+/* LIVE UAE CLOCK */
+function updateClock(){
+let now=new Date();
+let options={timeZone:"Asia/Dubai",hour:"2-digit",minute:"2-digit",second:"2-digit"};
+document.getElementById("clock").textContent=
+"Dubai Time: "+now.toLocaleTimeString("en-US",options);
+}
+setInterval(updateClock,1000);
+updateClock();
+
+/* TOGGLE CODE */
+function toggleCode(){
+let box=document.getElementById("codeBox");
+box.style.display=box.style.display==="block"?"none":"block";
+}
+</script>
+
+</body>
+</html>
